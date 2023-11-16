@@ -16,6 +16,8 @@
 package com.example.lunchtray
 
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -25,8 +27,12 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.lunchtray.ui.EntreeMenuScreen
 import com.example.lunchtray.ui.OrderViewModel
 import com.example.lunchtray.ui.StartOrderScreen
+
+import com.example.lunchtray.datasource.DataSource
 
 // TODO: Screen enum
 
@@ -45,7 +51,7 @@ enum class LunchTrayScreen(){
 @Composable
 fun LunchTrayApp() {
     // TODO: Create Controller and initialization
-
+    val navController = rememberNavController()
     // Create ViewModel
     val viewModel: OrderViewModel = viewModel()
 
@@ -69,6 +75,23 @@ fun LunchTrayApp() {
                     })
             }
             composable(route = LunchTrayScreen.EntreeMenu.name) {
+            EntreeMenuScreen(
+                options = DataSource.entreeMenuItems,
+                onCancelButtonClicked = {
+                    viewModel.resetOrder()
+                    navController.popBackStack(LunchTrayScreen.Start.name, inclusive = false)
+
+                },
+                onNextButtonClicked = { navController.navigate(LunchTrayScreen.SideDishMenu.name) },
+                onSelectionChanged = { item ->
+                    viewModel.updateEntree(item)
+                },
+                modifier = Modifier
+                    .verticalScroll(rememberScrollState())
+                    .padding(innerPadding)
+            )
+
+                
             }
             composable(route = LunchTrayScreen.SideDishMenu.name) {
         }
