@@ -15,19 +15,33 @@
  */
 package com.example.lunchtray
 
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import com.example.lunchtray.ui.OrderViewModel
+import com.example.lunchtray.ui.StartOrderScreen
 
 // TODO: Screen enum
 
 // TODO: AppBar
 
 @OptIn(ExperimentalMaterial3Api::class)
+
+
+enum class LunchTrayScreen(){
+    Start,
+    EntreeMenu,
+    SideDishMenu,
+    AccompanimentMenu,
+    Checkout
+}
 @Composable
 fun LunchTrayApp() {
     // TODO: Create Controller and initialization
@@ -42,6 +56,29 @@ fun LunchTrayApp() {
     ) { innerPadding ->
         val uiState by viewModel.uiState.collectAsState()
 
-        // TODO: Navigation host
+        NavHost(
+            navController = navController,
+            startDestination = LunchTrayScreen.Start.name,
+            modifier = Modifier.padding(innerPadding)
+        ){
+            composable(route = LunchTrayScreen.Start.name){
+                StartOrderScreen(
+                    onStartOrderButtonClicked = {
+                        navController.navigate(LunchTrayScreen.EntreeMenu.name)
+
+                    })
+            }
+            composable(route = LunchTrayScreen.EntreeMenu.name) {
+            }
+            composable(route = LunchTrayScreen.SideDishMenu.name) {
+        }
+            composable(route = LunchTrayScreen.AccompanimentMenu.name) {
+            }
+            composable(route = LunchTrayScreen.Checkout.name) {
+
+            }
+
+        }
+
     }
 }
