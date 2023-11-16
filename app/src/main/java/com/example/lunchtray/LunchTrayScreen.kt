@@ -33,6 +33,8 @@ import com.example.lunchtray.ui.OrderViewModel
 import com.example.lunchtray.ui.StartOrderScreen
 
 import com.example.lunchtray.datasource.DataSource
+import com.example.lunchtray.ui.AccompanimentMenuScreen
+import com.example.lunchtray.ui.CheckoutScreen
 import com.example.lunchtray.ui.SideDishMenuScreen
 
 // TODO: Screen enum
@@ -112,9 +114,38 @@ fun LunchTrayApp() {
                 )
         }
             composable(route = LunchTrayScreen.AccompanimentMenu.name) {
+                AccompanimentMenuScreen(
+                    options = DataSource.accompanimentMenuItems,
+                    onCancelButtonClicked = {
+                             viewModel.resetOrder()
+                        navController.popBackStack(LunchTrayScreen.Start.name,inclusive = false)
+                    },
+                    onNextButtonClicked = { 
+                       navController.navigate(LunchTrayScreen.Checkout.name)
+                    },
+                    onSelectionChanged = {
+                        item ->
+                        viewModel.updateAccompaniment(item)
+                    },
+                    modifier = Modifier
+                        .verticalScroll(rememberScrollState())
+                        .padding(innerPadding)
+                )
             }
             composable(route = LunchTrayScreen.Checkout.name) {
-
+                CheckoutScreen(
+                    orderUiState = uiState,
+                    onCancelButtonClicked = {
+                        viewModel.resetOrder()
+                        navController.popBackStack(LunchTrayScreen.Start.name, inclusive = false)
+                    },
+                    onNextButtonClicked = {
+                        viewModel.resetOrder()
+                        navController.popBackStack(LunchTrayScreen.Start.name, inclusive = false)
+                    },
+                    modifier = Modifier
+                        .verticalScroll(rememberScrollState())
+                )
             }
 
         }
