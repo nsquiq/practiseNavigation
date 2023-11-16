@@ -33,6 +33,7 @@ import com.example.lunchtray.ui.OrderViewModel
 import com.example.lunchtray.ui.StartOrderScreen
 
 import com.example.lunchtray.datasource.DataSource
+import com.example.lunchtray.ui.SideDishMenuScreen
 
 // TODO: Screen enum
 
@@ -72,7 +73,10 @@ fun LunchTrayApp() {
                     onStartOrderButtonClicked = {
                         navController.navigate(LunchTrayScreen.EntreeMenu.name)
 
-                    })
+                    },
+                    modifier = Modifier
+                        .verticalScroll(rememberScrollState())
+                        .padding(innerPadding))
             }
             composable(route = LunchTrayScreen.EntreeMenu.name) {
             EntreeMenuScreen(
@@ -94,6 +98,18 @@ fun LunchTrayApp() {
                 
             }
             composable(route = LunchTrayScreen.SideDishMenu.name) {
+                SideDishMenuScreen(
+                    options = DataSource.sideDishMenuItems,
+                    onCancelButtonClicked = { viewModel.resetOrder()
+                        navController.popBackStack(LunchTrayScreen.Start.name, inclusive = false) },
+                    onNextButtonClicked = {  navController.navigate(LunchTrayScreen.AccompanimentMenu.name) },
+                    onSelectionChanged = { item ->
+                        viewModel.updateSideDish(item)
+                    },
+                    modifier = Modifier
+                        .verticalScroll(rememberScrollState())
+                        .padding(innerPadding)
+                )
         }
             composable(route = LunchTrayScreen.AccompanimentMenu.name) {
             }
